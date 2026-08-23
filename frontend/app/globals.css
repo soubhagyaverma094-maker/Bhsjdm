@@ -1,0 +1,62 @@
+/* ============================================================
+   app/globals.css
+   Brand Boosting Network CRM — Design tokens + Tailwind
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #FEFEFE;
+  --surface-1: #F5F4EF;
+  --surface-2: #FFFFFF;
+  --border: rgba(15, 15, 20, 0.08);
+  --border-strong: rgba(15, 15, 20, 0.16);
+  --text-primary: #0F0F14;
+  --text-secondary: #5F5E5A;
+  --text-muted: #8B8A85;
+
+  --hot: #E24B4A;
+  --hot-bg: #FAECE7;
+  --hot-text: #A32D2D;
+
+  --warm: #EF9F27;
+  --warm-bg: #FAEEDA;
+  --warm-text: #854F0B;
+
+  --cold: #378ADD;
+  --cold-bg: #E6F1FB;
+  --cold-text: #185FA5;
+
+  --radius: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0A0A0F;
+    --surface-1: #15151C;
+    --surface-2: #1C1C24;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text-primary: #F5F5F0;
+    --text-secondary: #A5A5A0;
+    --text-muted: #6E6E68;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+.font-serif { font-family: var(--font-voice), Georgia, serif; }
+.font-mono { font-family: var(--font-mono), monospace; }
+
+/* WhatsApp bubble colors */
+.msg-in { background: var(--surface-1); color: var(--text-primary); }
+.msg-out { background: #D4F0DE; color: #173404; }
+
+@media (prefers-color-scheme: dark) {
+  .msg-out { background: #1a3a25; color: #C5EED2; }
+}
