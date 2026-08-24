@@ -1,6 +1,6 @@
 // ============================================================
 // lib/supabase.ts
-// Brand Boosting Network CRM — Supabase client (browser only)
+// Brand Boosting Network CRM — Supabase browser client + types
 // ============================================================
 
 import { createBrowserClient } from '@supabase/ssr';
@@ -8,8 +8,8 @@ import { createBrowserClient } from '@supabase/ssr';
 export function createClient() {
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!  
+    );
 }
 
 // ============================================================
@@ -76,7 +76,7 @@ export interface LeadActivity {
 }
 
 // ============================================================
-// Utilities
+// Utility functions
 // ============================================================
 export function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
