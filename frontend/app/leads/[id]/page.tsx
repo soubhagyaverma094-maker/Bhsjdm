@@ -3,7 +3,8 @@
 // Brand Boosting Network CRM — Lead detail view
 // ============================================================
 'use client';
-
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
