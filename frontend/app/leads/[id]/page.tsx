@@ -10,7 +10,7 @@ import { useParams, useRouter } from 'next/navigation';
 import {
   createClient, timeAgo, formatBudget, formatService, initials,
   type Lead, type WhatsAppMessage, type LeadActivity,
-} from '@/lib/supabase';
+} from '../../../lib/supabase';
 
 const ACTIVITY_ICON: Record<string, string> = {
   lead_created: 'ti-user-plus',
