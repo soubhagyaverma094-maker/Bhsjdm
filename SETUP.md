@@ -12,6 +12,10 @@ Copy the entire contents of **[`01_schema.sql`](./01_schema.sql)** and Run.
 ### Query 2: Projects + tasks + invoices
 Copy the entire contents of **[`05_projects_tasks_invoices.sql`](./05_projects_tasks_invoices.sql)** and Run.
 
+### Query 3: Website intake + payment link + RLS fix
+Copy the entire contents of **[`06_extras.sql`](./06_extras.sql)** and Run.
+This also fixes RLS so a team_members row without `auth_user_id` works as long as the email matches your login.
+
 Verify:
 ```sql
 select tablename from pg_tables where schemaname = 'public' order by 1;
@@ -57,19 +61,25 @@ Also: Supabase → Authentication → Users → make sure each teammate has an a
 
 ## What's live now
 
-- ✅ **Leads** — WhatsApp inbound → auto-qualification with Kiara bot → hot/warm/cold scoring → auto-assign to right teammate → auto follow-ups every 15 min via Vercel Cron
-- ✅ **Proposals** — build one from `/proposals/new`, share the `/p/[slug]` link with the client, view-count and status auto-tracks (`sent` → `viewed` → `accepted`)
-- ✅ **Projects** — auto-created the moment you set a lead's stage to `won` (via Postgres trigger); kanban task board at `/projects/[id]`
-- ✅ **Invoices** — create at `/invoices`, invoice number auto-generated (`BBN-2026-0001` format), mark paid in one tap
-- ✅ **Client onboarding form** — share `/onboard/[leadId]` with a new client, their answers land in `onboarding_responses`
+- ✅ **Leads** — WhatsApp + website form (`/lead-form`) → auto-qualification with Kiara bot → hot/warm/cold scoring → auto-assign → auto follow-ups every 15 min via Vercel Cron
+- ✅ **Meetings** (`/meetings`) — schedule, track status, paste transcript, hit **AI summarise** to get Gemini-generated summary + next steps saved to the meeting row
+- ✅ **Proposals** — build at `/proposals/new`, share the `/p/[slug]` link, view-count auto-tracks (`sent` → `viewed` → `accepted`)
+- ✅ **Projects** — auto-created when a lead's stage flips to `won` (Postgres trigger); kanban task board at `/projects/[id]`
+- ✅ **Invoices** — create at `/invoices`, auto-numbered (`BBN-2026-0001`), optional payment link (Razorpay/Stripe/UPI — paste any URL), one-tap mark paid
+- ✅ **Reports** (`/reports`) — MRR, close rate, leads-by-source, leads-by-service, outstanding vs paid, all auto-computed
+- ✅ **Client onboarding form** — `/onboard/[leadId]`, answers land in `onboarding_responses`
 
 ## What's still not automated (yet)
 
-- Meetings booking — table exists (`meetings`), no UI or Cal.com/Google Cal sync yet
-- Meeting AI summary — `meetings.ai_summary` column exists, no recorder integration
-- Instagram/Facebook/Website form intake — only WhatsApp for now
+- Cal.com / Google Calendar sync on meetings (currently manual entry)
+- Meeting recording/transcription (you paste the transcript — no auto-pull from Zoom/Fireflies)
+- Instagram / Facebook DM intake — only WhatsApp + website form for now
 - Ad platform metrics ingestion — no Meta Ads / Google Ads pull
-- Monthly report generation
-- Razorpay/Stripe integration on invoices — status is manual "mark paid"
+- Razorpay/Stripe webhook auto-marking invoices paid (link works, mark-paid is manual)
 
 Ping me when you want any of these next.
+
+## Where to link the public forms
+
+- **Website enquiry form:** put a button on your site → https://bhsjdmhhhh.vercel.app/lead-form
+- **Client onboarding:** after you mark a lead `won`, share this with the client → https://bhsjdmhhhh.vercel.app/onboard/{lead-id-from-crm}

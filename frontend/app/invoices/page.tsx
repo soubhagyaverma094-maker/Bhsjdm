@@ -13,6 +13,7 @@ interface Invoice {
   status: string;
   due_date: string | null;
   paid_at: string | null;
+  payment_link: string | null;
   created_at: string;
 }
 
@@ -41,13 +42,14 @@ export default function InvoicesPage() {
   const [amount, setAmount] = useState('');
   const [gst, setGst] = useState('');
   const [dueDate, setDueDate] = useState('');
+  const [paymentLink, setPaymentLink] = useState('');
 
   useEffect(() => {
     (async () => {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) { router.replace('/login'); return; }
       const [{ data: inv, error }, { data: ld }] = await Promise.all([
-        supabase.from('invoices').select('id, invoice_no, lead_id, total, currency, status, due_date, paid_at, created_at').order('created_at', { ascending: false }).limit(200),
+        supabase.from('invoices').select('id, invoice_no, lead_id, total, currency, status, due_date, paid_at, payment_link, created_at').order('created_at', { ascending: false }).limit(200),
         supabase.from('leads').select('id, name, phone, company').order('last_activity_at', { ascending: false }).limit(100),
       ]);
       if (error) { setErr(error.message); setItems([]); return; }
@@ -71,11 +73,12 @@ export default function InvoicesPage() {
       gst: g,
       total: sub + g,
       due_date: dueDate || null,
+      payment_link: paymentLink.trim() || null,
       status: 'sent',
     }).select('*').single();
     if (error) { setErr(error.message); return; }
     if (data) setItems((prev) => [data as Invoice, ...(prev ?? [])]);
-    setShowNew(false); setAmount(''); setGst(''); setDueDate('');
+    setShowNew(false); setAmount(''); setGst(''); setDueDate(''); setPaymentLink('');
   }
 
   async function markPaid(id: string) {
@@ -114,6 +117,9 @@ export default function InvoicesPage() {
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)}
               className="h-10 px-3 bg-[var(--surface-2)] border border-[var(--border-strong)] rounded-lg text-sm" />
           </div>
+          <input value={paymentLink} onChange={(e) => setPaymentLink(e.target.value)}
+            placeholder="Payment link (Razorpay / Stripe / UPI) — optional"
+            className="w-full h-10 px-3 bg-[var(--surface-2)] border border-[var(--border-strong)] rounded-lg text-sm" />
           <button type="submit"
             className="h-10 px-4 rounded-lg bg-[var(--text-primary)] text-[var(--surface-2)] text-sm">
             Create invoice
@@ -143,6 +149,12 @@ export default function InvoicesPage() {
                   {i.due_date && i.status !== 'paid' ? ` · due ${i.due_date}` : ''}
                 </p>
               </div>
+              {i.payment_link && i.status !== 'paid' && (
+                <a href={i.payment_link} target="_blank" rel="noopener"
+                  className="text-[11px] h-7 px-2 rounded-md border border-[var(--border-strong)] shrink-0 flex items-center">
+                  Pay link
+                </a>
+              )}
               {i.status !== 'paid' && i.status !== 'cancelled' && (
                 <button onClick={() => markPaid(i.id)}
                   className="text-[11px] h-7 px-2 rounded-md border border-[var(--border-strong)] shrink-0">

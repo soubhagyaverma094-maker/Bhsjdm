@@ -6,9 +6,11 @@ import { createClient } from '../lib/supabase';
 
 const LINKS = [
   { href: '/dashboard', label: 'Leads' },
+  { href: '/meetings', label: 'Meetings' },
   { href: '/proposals', label: 'Proposals' },
   { href: '/projects', label: 'Projects' },
   { href: '/invoices', label: 'Invoices' },
+  { href: '/reports', label: 'Reports' },
 ];
 
 export default function AppNav() {
