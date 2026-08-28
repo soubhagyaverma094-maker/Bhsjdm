@@ -23,8 +23,8 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Protect dashboard + lead detail routes
-  const protectedRoutes = ['/dashboard', '/leads'];
+  // Protect internal team routes
+  const protectedRoutes = ['/dashboard', '/leads', '/proposals', '/projects', '/invoices', '/meetings'];
   const isProtected = protectedRoutes.some((r) => request.nextUrl.pathname.startsWith(r));
 
   if (isProtected && !user) {
@@ -40,5 +40,13 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/leads/:path*', '/login'],
+  matcher: [
+    '/dashboard/:path*',
+    '/leads/:path*',
+    '/proposals/:path*',
+    '/projects/:path*',
+    '/invoices/:path*',
+    '/meetings/:path*',
+    '/login',
+  ],
 };

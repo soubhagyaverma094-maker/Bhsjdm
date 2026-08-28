@@ -10,6 +10,7 @@ import {
   createClient, timeAgo, formatBudget, formatService,
   type Lead, type Temperature,
 } from '../../lib/supabase';
+import AppNav from '../AppNav';
 
 type Filter = 'all' | Temperature;
 
@@ -75,23 +76,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-[var(--border-strong)] px-5 py-3 flex items-center justify-between">
-        <div>
-          <h1 className="font-serif text-xl leading-none">Brand Boosting Network</h1>
-          <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.14em] mt-1">
-            Leads · action list
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-[var(--text-secondary)] hidden sm:block">{email}</span>
-          <button
-            onClick={signOut}
-            className="text-xs h-8 px-3 rounded-md border border-[var(--border-strong)] hover:bg-[var(--surface-1)]"
-          >
-            Sign out
-          </button>
-        </div>
-      </header>
+      <AppNav />
 
       <div className="px-5 py-4 flex gap-2 overflow-x-auto">
         {(['all', ...TEMP_ORDER] as Filter[]).map((f) => (
