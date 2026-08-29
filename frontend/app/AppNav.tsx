@@ -29,10 +29,13 @@ export default function AppNav() {
   }
 
   return (
-    <header className="border-b border-[var(--border-strong)] px-5 py-3 flex items-center justify-between gap-4">
-      <div className="flex items-center gap-6 min-w-0">
-        <Link href="/dashboard" className="font-serif text-lg leading-none whitespace-nowrap">
-          Brand Boosting Network
+    <header className="glass sticky top-3 mx-3 mt-3 px-4 py-2.5 flex items-center justify-between gap-4 rounded-2xl">
+      <div className="flex items-center gap-5 min-w-0">
+        <Link href="/dashboard" className="flex items-center gap-2 whitespace-nowrap">
+          <span className="text-lg">🚀</span>
+          <span className="font-serif text-base leading-none bg-gradient-to-r from-[var(--accent-2)] via-[var(--accent)] to-[var(--accent-3)] bg-clip-text text-transparent">
+            Brand Boosting Network
+          </span>
         </Link>
         <nav className="flex items-center gap-1 overflow-x-auto">
           {LINKS.map((l) => {
@@ -41,10 +44,10 @@ export default function AppNav() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`text-xs px-3 h-8 rounded-md flex items-center whitespace-nowrap ${
+                className={`text-xs px-3 h-8 rounded-full flex items-center whitespace-nowrap transition ${
                   active
-                    ? 'bg-[var(--text-primary)] text-[var(--surface-2)]'
-                    : 'text-[var(--text-secondary)] hover:bg-[var(--surface-1)]'
+                    ? 'btn-cosmic'
+                    : 'text-[var(--text-secondary)] hover:bg-white/5'
                 }`}
               >
                 {l.label}
@@ -57,7 +60,7 @@ export default function AppNav() {
         <span className="text-xs text-[var(--text-secondary)] hidden sm:block">{email}</span>
         <button
           onClick={signOut}
-          className="text-xs h-8 px-3 rounded-md border border-[var(--border-strong)] hover:bg-[var(--surface-1)]"
+          className="text-xs h-8 px-3 rounded-full border border-[var(--border-strong)] hover:bg-white/5"
         >
           Sign out
         </button>
