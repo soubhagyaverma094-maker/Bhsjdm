@@ -43,7 +43,7 @@ export default function LeadFormPage() {
       phone: f.phone.trim(),
       email: f.email.trim() || null,
       company: f.company.trim() || null,
-      source: 'website',
+      source: 'website_form',
       service_interested: f.service || null,
       budget_range: f.budget || null,
       qualification_data: { initial_message: f.message.trim() },
