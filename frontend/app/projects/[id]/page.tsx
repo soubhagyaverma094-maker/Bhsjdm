@@ -41,17 +41,22 @@ export default function ProjectDetail() {
   const [err, setErr] = useState('');
 
   useEffect(() => {
+    let cancelled = false;
     (async () => {
-      const { data: u } = await supabase.auth.getUser();
-      if (!u.user) { router.replace('/login'); return; }
-      const [{ data: p }, { data: t, error }] = await Promise.all([
+      const { data: u, error: uErr } = await supabase.auth.getUser();
+      if (cancelled) return;
+      if (uErr || !u.user) { router.replace('/login'); return; }
+      const [{ data: p, error: pErr }, { data: t, error: tErr }] = await Promise.all([
         supabase.from('projects').select('id, name, status, monthly_value').eq('id', params.id).maybeSingle(),
         supabase.from('project_tasks').select('*').eq('project_id', params.id).order('created_at', { ascending: true }),
       ]);
+      if (cancelled) return;
+      if (pErr) setErr(pErr.message);
+      else if (tErr) setErr(tErr.message);
       setProject(p as Project | null);
-      if (error) setErr(error.message);
       setTasks((t ?? []) as Task[]);
     })();
+    return () => { cancelled = true; };
   }, [params.id, router, supabase]);
 
   async function addTask(e: React.FormEvent) {
@@ -95,7 +100,18 @@ export default function ProjectDetail() {
         </button>
       </form>
 
-      {err && <p className="px-5 text-xs text-[#A32D2D]">{err}</p>}
+      {err && (
+        <div className="mx-5 mb-4 glass p-4">
+          <p className="text-sm text-[#FF9AA6] font-medium">Something broke</p>
+          <p className="text-xs text-[var(--text-secondary)] mt-1 font-mono break-all">{err}</p>
+          {/relation.*does not exist|schema cache/i.test(err) && (
+            <p className="text-xs text-[var(--text-secondary)] mt-2">
+              Run <code>05_projects_tasks_invoices.sql</code> in Supabase to create
+              the projects &amp; project_tasks tables.
+            </p>
+          )}
+        </div>
+      )}
 
       <main className="px-5 pb-12 overflow-x-auto">
         <div className="flex gap-3 min-w-max">

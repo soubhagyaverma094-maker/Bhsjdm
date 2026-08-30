@@ -29,17 +29,21 @@ export default function ProjectsPage() {
   const [err, setErr] = useState('');
 
   useEffect(() => {
+    let cancelled = false;
     (async () => {
-      const { data: u } = await supabase.auth.getUser();
-      if (!u.user) { router.replace('/login'); return; }
+      const { data: u, error: uErr } = await supabase.auth.getUser();
+      if (cancelled) return;
+      if (uErr || !u.user) { router.replace('/login'); return; }
       const { data, error } = await supabase
         .from('projects')
         .select('id, name, status, monthly_value, start_date, created_at')
         .order('created_at', { ascending: false })
         .limit(200);
+      if (cancelled) return;
       if (error) { setErr(error.message); setItems([]); return; }
       setItems((data ?? []) as Project[]);
     })();
+    return () => { cancelled = true; };
   }, [router, supabase]);
 
   return (
@@ -52,8 +56,21 @@ export default function ProjectsPage() {
         </p>
       </div>
       <main className="px-5 pb-12">
-        {items === null && <p className="text-sm text-[var(--text-muted)] py-8 text-center">Loading…</p>}
-        {err && <p className="text-sm text-[#A32D2D]">Error: {err}</p>}
+        {items === null && !err && (
+          <p className="text-sm text-[var(--text-muted)] py-8 text-center">Loading…</p>
+        )}
+        {err && (
+          <div className="glass p-4 my-4">
+            <p className="text-sm text-[#FF9AA6] font-medium">Couldn’t load projects</p>
+            <p className="text-xs text-[var(--text-secondary)] mt-1 font-mono break-all">{err}</p>
+            {/relation.*does not exist|schema cache/i.test(err) && (
+              <p className="text-xs text-[var(--text-secondary)] mt-2">
+                Looks like the <code>projects</code> table isn’t created yet. Run{' '}
+                <code>05_projects_tasks_invoices.sql</code> in Supabase SQL Editor.
+              </p>
+            )}
+          </div>
+        )}
         {items?.length === 0 && !err && (
           <p className="text-sm text-[var(--text-muted)] py-8 text-center">
             No projects yet. Close a deal (leads → set stage to <b>won</b>) and a project will spawn here.
