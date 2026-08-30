@@ -43,46 +43,48 @@ export default async function PublicProposal({ params }: Params) {
   const services: any[] = Array.isArray(proposal.services) ? proposal.services : [];
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900 px-6 py-10">
+    <div className="min-h-screen px-6 py-10">
       <div className="max-w-2xl mx-auto">
-        <p className="text-[11px] uppercase tracking-[0.14em] text-neutral-500">Proposal</p>
-        <h1 className="font-serif text-3xl mt-2">{proposal.title}</h1>
+        <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--text-muted)]">Proposal</p>
+        <h1 className="font-serif text-4xl mt-2 mb-6 text-cosmic-gradient">{proposal.title}</h1>
 
-        {services.length > 0 && (
-          <section className="mt-8">
-            <h2 className="text-sm font-medium mb-3">Scope</h2>
-            <ul className="space-y-3">
-              {services.map((s, i) => (
-                <li key={i} className="border-b pb-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="font-medium">{s.name || '—'}</span>
-                    <span className="font-mono">
-                      {proposal.currency} {(s.monthly_price || s.one_time_price || 0).toLocaleString('en-IN')}
-                    </span>
-                  </div>
-                  {s.description && <p className="text-xs text-neutral-600 mt-1">{s.description}</p>}
-                </li>
-              ))}
-            </ul>
+        <div className="glass p-6">
+          {services.length > 0 && (
+            <section>
+              <h2 className="text-[11px] uppercase tracking-[0.14em] text-[var(--text-secondary)] mb-3">Scope</h2>
+              <ul className="space-y-3">
+                {services.map((s, i) => (
+                  <li key={i} className="border-b border-[var(--border-strong)] pb-3 last:border-0">
+                    <div className="flex justify-between text-sm">
+                      <span className="font-medium text-white">{s.name || '—'}</span>
+                      <span className="font-mono text-white">
+                        {proposal.currency} {(s.monthly_price || s.one_time_price || 0).toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                    {s.description && <p className="text-xs text-[var(--text-secondary)] mt-1">{s.description}</p>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          <section className={`${services.length ? 'mt-6 pt-6 border-t border-[var(--border-strong)]' : ''}`}>
+            <div className="space-y-1 text-sm">
+              <Row label="Subtotal" val={`${proposal.currency} ${(proposal.subtotal || 0).toLocaleString('en-IN')}`} />
+              {proposal.gst ? <Row label="GST" val={`${proposal.currency} ${proposal.gst.toLocaleString('en-IN')}`} /> : null}
+              <Row label="Total" val={`${proposal.currency} ${(proposal.total || 0).toLocaleString('en-IN')}`} strong />
+            </div>
           </section>
-        )}
 
-        <section className="mt-8 border-t pt-6">
-          <div className="space-y-1 text-sm">
-            <Row label="Subtotal" val={`${proposal.currency} ${(proposal.subtotal || 0).toLocaleString('en-IN')}`} />
-            {proposal.gst ? <Row label="GST" val={`${proposal.currency} ${proposal.gst.toLocaleString('en-IN')}`} /> : null}
-            <Row label="Total" val={`${proposal.currency} ${(proposal.total || 0).toLocaleString('en-IN')}`} strong />
-          </div>
-        </section>
+          {proposal.terms && (
+            <section className="mt-6 pt-6 border-t border-[var(--border-strong)]">
+              <h2 className="text-[11px] uppercase tracking-[0.14em] text-[var(--text-secondary)] mb-2">Terms</h2>
+              <p className="text-xs text-[var(--text-secondary)] whitespace-pre-line">{proposal.terms}</p>
+            </section>
+          )}
+        </div>
 
-        {proposal.terms && (
-          <section className="mt-8">
-            <h2 className="text-sm font-medium mb-2">Terms</h2>
-            <p className="text-xs text-neutral-600 whitespace-pre-line">{proposal.terms}</p>
-          </section>
-        )}
-
-        <p className="text-[11px] text-neutral-400 mt-10 text-center">
+        <p className="text-[11px] text-[var(--text-muted)] mt-6 text-center">
           Valid for {proposal.validity_days} days from date of issue.
         </p>
       </div>
@@ -92,7 +94,7 @@ export default async function PublicProposal({ params }: Params) {
 
 function Row({ label, val, strong }: { label: string; val: string; strong?: boolean }) {
   return (
-    <div className={`flex justify-between ${strong ? 'font-medium text-base pt-2' : ''}`}>
+    <div className={`flex justify-between ${strong ? 'font-medium text-base pt-2 text-white' : 'text-[var(--text-secondary)]'}`}>
       <span>{label}</span>
       <span className="font-mono">{val}</span>
     </div>

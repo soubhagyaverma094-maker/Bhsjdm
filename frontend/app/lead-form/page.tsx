@@ -1,18 +1,13 @@
 // Public website lead capture form — anyone can submit.
-// Creates a lead with source='website' → triggers the same downstream
+// Creates a lead with source='website_form' → triggers the same downstream
 // qualification / assignment / follow-up flow as WhatsApp.
 'use client';
 import { useState } from 'react';
 import { createClient } from '../../lib/supabase';
 
 const SERVICES = [
-  'social_media',
-  'video_production',
-  'branding',
-  'website',
-  'paid_ads',
-  'seo',
-  'other',
+  'social_media', 'video_production', 'branding',
+  'website', 'paid_ads', 'seo', 'other',
 ];
 const BUDGETS = [
   { v: 'under_10k', l: 'Under ₹10k / month' },
@@ -54,11 +49,12 @@ export default function LeadFormPage() {
 
   if (status === 'done') {
     return (
-      <div className="min-h-screen bg-white text-neutral-900 flex items-center justify-center px-6">
-        <div className="max-w-sm text-center">
-          <h1 className="font-serif text-3xl mb-2">Thank you</h1>
-          <p className="text-sm text-neutral-600">
-            Your enquiry is in. Our team will reach out on WhatsApp within a few hours.
+      <div className="min-h-screen flex items-center justify-center px-6 py-10">
+        <div className="glass max-w-sm text-center p-8">
+          <div className="text-4xl mb-3">🚀</div>
+          <h1 className="font-serif text-3xl text-white mb-2">Enquiry launched</h1>
+          <p className="text-sm text-[var(--text-secondary)]">
+            Thanks — our team will reach out on WhatsApp within a few hours with next steps.
           </p>
         </div>
       </div>
@@ -66,56 +62,60 @@ export default function LeadFormPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900 px-6 py-10">
+    <div className="min-h-screen px-6 py-10">
       <div className="max-w-lg mx-auto">
-        <p className="text-[11px] uppercase tracking-[0.14em] text-neutral-500">Brand Boosting Network</p>
-        <h1 className="font-serif text-3xl mt-2 mb-1">Start a project</h1>
-        <p className="text-sm text-neutral-600 mb-6">
-          Fill this and we’ll reach out on WhatsApp within a few hours with next steps.
-        </p>
+        <div className="text-center mb-6">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--text-muted)]">Brand Boosting Network</p>
+          <h1 className="font-serif text-4xl mt-2 mb-1 text-cosmic-gradient">Start a project</h1>
+          <p className="text-sm text-[var(--text-secondary)]">
+            Fill this and we’ll reach out on WhatsApp within a few hours with next steps.
+          </p>
+        </div>
 
-        <form onSubmit={submit} className="space-y-4">
-          <F label="Name" v={f.name} on={upd('name')} required />
-          <F label="WhatsApp number" v={f.phone} on={upd('phone')} required type="tel" placeholder="+91…" />
-          <F label="Email" v={f.email} on={upd('email')} type="email" />
-          <F label="Company / brand" v={f.company} on={upd('company')} />
+        <div className="glass p-5">
+          <form onSubmit={submit} className="space-y-4">
+            <F label="Name *" v={f.name} on={upd('name')} required />
+            <F label="WhatsApp number *" v={f.phone} on={upd('phone')} required type="tel" placeholder="+91…" />
+            <F label="Email" v={f.email} on={upd('email')} type="email" />
+            <F label="Company / brand" v={f.company} on={upd('company')} />
 
-          <div>
-            <L>Service you need</L>
-            <select value={f.service} onChange={upd('service')}
-              className="w-full h-11 px-3 border border-neutral-300 rounded-lg text-sm bg-white">
-              <option value="">— choose —</option>
-              {SERVICES.map((s) => (
-                <option key={s} value={s}>
-                  {s.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
-                </option>
-              ))}
-            </select>
-          </div>
+            <div>
+              <L>Service you need</L>
+              <select value={f.service} onChange={upd('service')}
+                className="w-full h-11 px-3 bg-black/25 border border-[var(--border-strong)] rounded-lg text-sm text-white">
+                <option value="">— choose —</option>
+                {SERVICES.map((s) => (
+                  <option key={s} value={s}>
+                    {s.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <div>
-            <L>Monthly budget</L>
-            <select value={f.budget} onChange={upd('budget')}
-              className="w-full h-11 px-3 border border-neutral-300 rounded-lg text-sm bg-white">
-              <option value="">— choose —</option>
-              {BUDGETS.map((b) => <option key={b.v} value={b.v}>{b.l}</option>)}
-            </select>
-          </div>
+            <div>
+              <L>Monthly budget</L>
+              <select value={f.budget} onChange={upd('budget')}
+                className="w-full h-11 px-3 bg-black/25 border border-[var(--border-strong)] rounded-lg text-sm text-white">
+                <option value="">— choose —</option>
+                {BUDGETS.map((b) => <option key={b.v} value={b.v}>{b.l}</option>)}
+              </select>
+            </div>
 
-          <div>
-            <L>Tell us more (optional)</L>
-            <textarea value={f.message} onChange={upd('message')} rows={4}
-              className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm" />
-          </div>
+            <div>
+              <L>Tell us more (optional)</L>
+              <textarea value={f.message} onChange={upd('message')} rows={4}
+                className="w-full px-3 py-2 bg-black/25 border border-[var(--border-strong)] rounded-lg text-sm text-white placeholder:text-[var(--text-muted)]" />
+            </div>
 
-          {err && <p className="text-xs text-red-600">{err}</p>}
-          <button type="submit" disabled={status === 'saving'}
-            className="w-full h-11 rounded-lg bg-neutral-900 text-white text-sm font-medium disabled:opacity-50">
-            {status === 'saving' ? 'Sending…' : 'Send enquiry'}
-          </button>
-        </form>
+            {err && <p className="text-xs text-[#FF9AA6]">{err}</p>}
+            <button type="submit" disabled={status === 'saving'}
+              className="btn-cosmic w-full h-11 rounded-lg text-sm font-medium tracking-wide">
+              {status === 'saving' ? 'Sending…' : '🚀  Send enquiry'}
+            </button>
+          </form>
+        </div>
 
-        <p className="text-[11px] text-neutral-400 mt-8 text-center">
+        <p className="text-[11px] text-[var(--text-muted)] text-center mt-6">
           By submitting you agree to be contacted about your enquiry.
         </p>
       </div>
@@ -124,7 +124,7 @@ export default function LeadFormPage() {
 }
 
 function L({ children }: { children: React.ReactNode }) {
-  return <label className="text-[11px] uppercase tracking-[0.1em] text-neutral-500 block mb-1.5">{children}</label>;
+  return <label className="text-[11px] uppercase tracking-[0.14em] text-[var(--text-secondary)] block mb-1.5">{children}</label>;
 }
 function F({ label, v, on, required, type = 'text', placeholder }: {
   label: string; v: string; on: (e: any) => void;
@@ -132,9 +132,9 @@ function F({ label, v, on, required, type = 'text', placeholder }: {
 }) {
   return (
     <div>
-      <L>{label}{required && ' *'}</L>
+      <L>{label}</L>
       <input type={type} value={v} onChange={on} placeholder={placeholder} required={required}
-        className="w-full h-11 px-3 border border-neutral-300 rounded-lg text-sm" />
+        className="w-full h-11 px-3 bg-black/25 border border-[var(--border-strong)] rounded-lg text-sm text-white placeholder:text-[var(--text-muted)]" />
     </div>
   );
 }
