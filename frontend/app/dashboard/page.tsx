@@ -83,10 +83,10 @@ export default function DashboardPage() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`h-8 px-3 rounded-full text-xs whitespace-nowrap border ${
+            className={`h-8 px-3 rounded-full text-xs whitespace-nowrap border transition ${
               filter === f
-                ? 'bg-[var(--text-primary)] text-[var(--surface-2)] border-[var(--text-primary)]'
-                : 'border-[var(--border-strong)] text-[var(--text-secondary)]'
+                ? 'btn-cosmic border-transparent text-white'
+                : 'border-[var(--border-strong)] text-[var(--text-secondary)] hover:text-white hover:bg-white/5'
             }`}
           >
             {f === 'all' ? 'All' : f[0].toUpperCase() + f.slice(1)}
